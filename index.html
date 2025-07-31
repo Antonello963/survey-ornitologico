@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Survey Ornitologico - Falco Lanario</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2c5530;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a7c59;
+            box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .coord-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .species-container {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .species-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+
+        .species-item input[type="text"] {
+            flex: 1;
+            margin: 0;
+        }
+
+        .species-item button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .add-species-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .photo-upload {
+            border: 2px dashed #4a7c59;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .photo-upload:hover {
+            background: #e9ecef;
+            border-color: #2c5530;
+        }
+
+        .photo-upload input[type="file"] {
+            display: none;
+        }
+
+        .submit-section {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 25px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #5a6268;
+        }
+
+        .export-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .export-btn:hover {
+            background: #138496;
+        }
+
+        .view-btn {
+            background: #fd7e14;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .view-btn:hover {
+            background: #e55a00;
+        }
+
+        .data-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .data-viewer-content {
+            background: white;
+            border-radius: 10px;
+            max-width: 95%;
+            max-height: 90%;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .close-viewer {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 15px;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .time-inputs, .coord-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .weather-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦅 Survey Ornitologico</h1>
+            <p>Sistema di raccolta dati per lo studio del Falco Lanario</p>
+        </div>
+
+        <div class="form-container">
+            <form id="surveyForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="surveyId">ID Osservazione <span class="required">*</span></label>
+                        <input type="text" id="surveyId" name="surveyId" required>
+                        <div class="help-text">Identificativo univoco dell'osservazione</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Data dell'osservazione <span class="required">*</span></label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Orario Survey <span class="required">*</span></label>
+                        <div class="time-inputs">
+                            <input type="time" id="startTime" name="startTime" placeholder="Inizio" required>
+                            <input type="time" id="endTime" name="endTime" placeholder="Fine" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Coordinate Geografiche <span class="required">*</span></label>
+                        <div class="coord-inputs">
+                            <input type="number" id="latitude" name="latitude" placeholder="Latitudine" step="0.000001" required>
+                            <input type="number" id="longitude" name="longitude" placeholder="Longitudine" step="0.000001" required>
+                        </div>
+                        <div class="help-text">Sistema cartografico uniforme (WGS84)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Presenza coppia riproduttiva</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="breedingPair" name="breedingPair">
+                            <label for="breedingPair">Coppia riproduttiva presente</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lannerAge">Età Falco Lanario osservato</label>
+                        <select id="lannerAge" name="lannerAge">
+                            <option value="">Seleziona età</option>
+                            <option value="juv">Giovanile (juv)</option>
+                            <option value="sub-ad">Sub-adulto (sub-ad)</option>
+                            <option value="ad">Adulto (ad)</option>
+                            <option value="non-osservato">Non osservato</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Specie osservate (con focus su potenziali prede)</label>
+                        <div class="species-container">
+                            <div id="speciesList">
+                                <div class="species-item">
+                                    <input type="text" placeholder="Nome specie" name="species[]">
+                                    <input type="number" placeholder="N. individui" name="speciesCount[]" min="1">
+                                    <button type="button" onclick="removeSpecies(this)">Rimuovi</button>
+                                </div>
+                            </div>
+                            <button type="button" class="add-species-btn" onclick="addSpecies()">+ Aggiungi Specie</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Condizioni Climatiche</label>
+                        <div class="weather-grid">
+                            <div class="form-group">
+                                <label for="weather">Condizioni</label>
+                                <select id="weather" name="weather">
+                                    <option value="">Seleziona</option>
+                                    <option value="sole">Sole</option>
+                                    <option value="parzialmente-nuvoloso">Parzialmente nuvoloso</option>
+                                    <option value="nuvoloso">Nuvoloso</option>
+                                    <option value="pioggia-leggera">Pioggia leggera</option>
+                                    <option value="pioggia">Pioggia</option>
+                                    <option value="temporale">Temporale</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="wind">Vento</label>
+                                <select id="wind" name="wind">
+                                    <option value="">Seleziona</option>
+                                    <option value="assente">Assente</option>
+                                    <option value="leggero">Leggero</option>
+                                    <option value="moderato">Moderato</option>
+                                    <option value="forte">Forte</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="temperature">Temperatura (°C)</label>
+                                <input type="number" id="temperature" name="temperature" min="-20" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="visibility">Visibilità</label>
+                                <select id="visibility" name="visibility">
+                                    <option value="">Seleziona</option>
+                                    <option value="ottima">Ottima</option>
+                                    <option value="buona">Buona</option>
+                                    <option value="moderata">Moderata</option>
+                                    <option value="scarsa">Scarsa</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="habitat">Tipologia Habitat</label>
+                        <select id="habitat" name="habitat">
+                            <option value="">Seleziona habitat (CORINE Land Cover)</option>
+                            <option value="111">111 - Tessuto urbano continuo</option>
+                            <option value="112">112 - Tessuto urbano discontinuo</option>
+                            <option value="211">211 - Seminativi in aree non irrigue</option>
+                            <option value="212">212 - Seminativi in aree irrigue</option>
+                            <option value="221">221 - Vigneti</option>
+                            <option value="222">222 - Frutteti e frutti minori</option>
+                            <option value="223">223 - Oliveti</option>
+                            <option value="231">231 - Prati stabili</option>
+                            <option value="311">311 - Boschi di latifoglie</option>
+                            <option value="312">312 - Boschi di conifere</option>
+                            <option value="313">313 - Boschi misti</option>
+                            <option value="321">321 - Aree a pascolo naturale</option>
+                            <option value="322">322 - Brughiere e cespuglieti</option>
+                            <option value="323">323 - Aree a vegetazione sclerofilla</option>
+                            <option value="324">324 - Aree a vegetazione boschiva</option>
+                            <option value="331">331 - Spiagge, dune, sabbie</option>
+                            <option value="332">332 - Rocce nude, falesie, rupi</option>
+                            <option value="333">333 - Aree con vegetazione rada</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Materiale Fotografico</label>
+                        <div class="photo-upload" onclick="document.getElementById('photos').click()">
+                            <input type="file" id="photos" name="photos" multiple accept="image/*">
+                            <p>📷 Clicca per caricare foto</p>
+                            <div class="help-text">Associato all'ID osservazione</div>
+                        </div>
+                        <div id="photoPreview"></div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="notes">Note aggiuntive</label>
+                        <textarea id="notes" name="notes" placeholder="Interazioni con altre specie, presenza di fonti di disturbo, variazioni di habitat rispetto a precedenti osservazioni, etc."></textarea>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">💾 Salva Osservazione</button>
+                    <button type="button" class="clear-btn" onclick="clearForm()">🗑️ Cancella Form</button>
+                    <button type="button" class="export-btn" onclick="exportToCSV()">📊 Esporta CSV</button>
+                    <button type="button" class="view-btn" onclick="viewObservations()">👁️ Visualizza Dati</button>
+                    <div id="statusMessage"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Visualizzatore dati -->
+    <div id="dataViewer" class="data-viewer">
+        <div class="data-viewer-content">
+            <button class="close-viewer" onclick="closeDataViewer()">✕ Chiudi</button>
+            <h3>Osservazioni Salvate</h3>
+            <div id="dataTableContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Genera ID automatico basato su data e ora
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const dateStr = now.getFullYear().toString() + 
+                           (now.getMonth() + 1).toString().padStart(2, '0') + 
+                           now.getDate().toString().padStart(2, '0');
+            const timeStr = now.getHours().toString().padStart(2, '0') + 
+                           now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('surveyId').value = `FL_${dateStr}_${timeStr}`;
+            
+            // Imposta data odierna
+            document.getElementById('date').value = now.toISOString().split('T')[0];
+        });
+
+        // Aggiungi specie
+        function addSpecies() {
+            const speciesList = document.getElementById('speciesList');
+            const newSpeciesItem = document.createElement('div');
+            newSpeciesItem.className = 'species-item';
+            newSpeciesItem.innerHTML = `
+                <input type="text" placeholder="Nome specie" name="species[]">
+                <input type="number" placeholder="N. individui" name="speciesCount[]" min="1">
+                <button type="button" onclick="removeSpecies(this)">Rimuovi</button>
+            `;
+            speciesList.appendChild(newSpeciesItem);
+        }
+
+        // Rimuovi specie
+        function removeSpecies(button) {
+            button.parentElement.remove();
+        }
+
+        // Gestione upload foto
+        document.getElementById('photos').addEventListener('change', function(e) {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = '';
+            
+            if (e.target.files.length > 0) {
+                const fileInfo = document.createElement('div');
+                fileInfo.innerHTML = `<p style="margin-top: 10px; color: #28a745; font-weight: 600;">📷 ${e.target.files.length} foto selezionate</p>`;
+                preview.appendChild(fileInfo);
+            }
+        });
+
+        // Gestione submit form
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Raccolta dati
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Campi semplici
+            for (let [key, value] of formData.entries()) {
+                if (!key.endsWith('[]')) {
+                    data[key] = value;
+                }
+            }
+            
+            // Gestione array specie
+            const species = formData.getAll('species[]').filter(s => s.trim() !== '');
+            const speciesCount = formData.getAll('speciesCount[]').filter(s => s.trim() !== '');
+            data.speciesObserved = species.map((spec, index) => ({
+                name: spec,
+                count: speciesCount[index] || 1
+            }));
+            
+            // Aggiungi timestamp
+            data.timestamp = new Date().toISOString();
+            
+            // Simula salvataggio (in un'app reale, invieresti a un server)
+            saveObservation(data);
+        });
+
+        // Simula salvataggio dati
+        function saveObservation(data) {
+            const statusDiv = document.getElementById('statusMessage');
+            
+            try {
+                // Salva in localStorage per demo
+                const observations = JSON.parse(localStorage.getItem('ornithologyData') || '[]');
+                observations.push(data);
+                localStorage.setItem('ornithologyData', JSON.stringify(observations));
+                
+                statusDiv.innerHTML = '<div class="success">✅ Osservazione salvata con successo!</div>';
+                
+                // Auto-clear dopo 3 secondi
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                    generateNewId();
+                }, 3000);
+                
+            } catch (error) {
+                statusDiv.innerHTML = '<div class="error">❌ Errore nel salvataggio. Riprova.</div>';
+            }
+        }
+
+        // Genera nuovo ID
+        function generateNewId() {
+            const now = new Date();
+            const dateStr = now.getFullYear().toString() + 
+                           (now.getMonth() + 1).toString().padStart(2, '0') + 
+                           now.getDate().toString().padStart(2, '0');
+            const timeStr = now.getHours().toString().padStart(2, '0') + 
+                           now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('surveyId').value = `FL_${dateStr}_${timeStr}`;
+        }
+
+        // Cancella form
+        function clearForm() {
+            if (confirm('Sei sicuro di voler cancellare tutti i dati inseriti?')) {
+                document.getElementById('surveyForm').reset();
+                document.getElementById('photoPreview').innerHTML = '';
+                document.getElementById('statusMessage').innerHTML = '';
+                generateNewId();
+                document.getElementById('date').value = new Date().toISOString().split('T')[0];
+            }
+        }
+
+        // Geolocalizzazione automatica
+        if (navigator.geolocation) {
+            const geoButton = document.createElement('button');
+            geoButton.type = 'button';
+            geoButton.innerHTML = '📍 Usa posizione attuale';
+            geoButton.style.cssText = `
+                background: #17a2b8; color: white; border: none; 
+                padding: 8px 15px; border-radius: 5px; cursor: pointer; 
+                margin-top: 10px; font-size: 0.9rem;
+            `;
+            
+            geoButton.onclick = function() {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+                    document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+                }, function(error) {
+                    alert('Impossibile ottenere la posizione: ' + error.message);
+                });
+            };
+            
+            document.querySelector('.coord-inputs').parentElement.appendChild(geoButton);
+        }
+
+        // Funzione per esportare in CSV
+        function exportToCSV() {
+            const observations = JSON.parse(localStorage.getItem('ornithologyData') || '[]');
+            
+            if (observations.length === 0) {
+                alert('Nessuna osservazione da esportare. Salva prima alcune osservazioni.');
+                return;
+            }
+
+            // Intestazioni CSV
+            const headers = [
+                'ID Osservazione',
+                'Data',
+                'Orario Inizio',
+                'Orario Fine',
+                'Latitudine',
+                'Longitudine',
+                'Coppia Riproduttiva',
+                'Età Falco Lanario',
+                'Specie Osservate',
+                'Numero Individui',
+                'Condizioni Meteo',
+                'Vento',
+                'Temperatura (°C)',
+                'Visibilità',
+                'Habitat (CORINE)',
+                'Note',
+                'Timestamp Salvataggio'
+            ];
+
+            // Converti dati in formato CSV
+            let csvContent = headers.join(',') + '\n';
+
+            observations.forEach(obs => {
+                // Gestione specie osservate
+                const speciesNames = obs.speciesObserved ? obs.speciesObserved.map(s => s.name).join('; ') : '';
+                const speciesCounts = obs.speciesObserved ? obs.speciesObserved.map(s => s.count).join('; ') : '';
+
+                const row = [
+                    `"${obs.surveyId || ''}"`,
+                    `"${obs.date || ''}"`,
+                    `"${obs.startTime || ''}"`,
+                    `"${obs.endTime || ''}"`,
+                    `"${obs.latitude || ''}"`,
+                    `"${obs.longitude || ''}"`,
+                    `"${obs.breedingPair ? 'Sì' : 'No'}"`,
+                    `"${obs.lannerAge || ''}"`,
+                    `"${speciesNames}"`,
+                    `"${speciesCounts}"`,
+                    `"${obs.weather || ''}"`,
+                    `"${obs.wind || ''}"`,
+                    `"${obs.temperature || ''}"`,
+                    `"${obs.visibility || ''}"`,
+                    `"${obs.habitat || ''}"`,
+                    `"${(obs.notes || '').replace(/"/g, '""')}"`,
+                    `"${obs.timestamp || ''}"`
+                ];
+                
+                csvContent += row.join(',') + '\n';
+            });
+
+            // Crea e scarica il file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                
+                // Nome file con data corrente
+                const now = new Date();
+                const dateString = now.getFullYear() + '-' + 
+                                 (now.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+                                 now.getDate().toString().padStart(2, '0');
+                link.setAttribute('download', `Osservazioni_Ornitologiche_${dateString}.csv`);
+                
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Messaggio di conferma
+                const statusDiv = document.getElementById('statusMessage');
+                statusDiv.innerHTML = '<div class="success">📁 File CSV esportato con successo!</div>';
+                setTimeout(() => statusDiv.innerHTML = '', 3000);
+            }
+        }
+
+        // Visualizza osservazioni salvate
+        function viewObservations() {
+            const observations = JSON.parse(localStorage.getItem('ornithologyData') || '[]');
+            const viewer = document.getElementById('dataViewer');
+            const container = document.getElementById('dataTableContainer');
+            
+            if (observations.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d; margin: 20px;">Nessuna osservazione salvata.</p>';
+            } else {
+                let tableHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <strong>Totale osservazioni: ${observations.length}</strong>
+                        <button onclick="clearAllData()" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; margin-left: 15px; cursor: pointer;">🗑️ Cancella Tutti i Dati</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Data</th>
+                                    <th>Orario</th>
+                                    <th>Coordinate</th>
+                                    <th>Coppia</th>
+                                    <th>Età Lanario</th>
+                                    <th>Specie</th>
+                                    <th>Meteo</th>
+                                    <th>Habitat</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                observations.forEach(obs => {
+                    const speciesText = obs.speciesObserved ? 
+                        obs.speciesObserved.map(s => `${s.name} (${s.count})`).join(', ') : '';
+                    
+                    tableHTML += `
+                        <tr>
+                            <td>${obs.surveyId || ''}</td>
+                            <td>${obs.date || ''}</td>
+                            <td>${obs.startTime || ''} - ${obs.endTime || ''}</td>
+                            <td>${obs.latitude || ''}, ${obs.longitude || ''}</td>
+                            <td>${obs.breedingPair ? '✅' : '❌'}</td>
+                            <td>${obs.lannerAge || 'N/A'}</td>
+                            <td style="max-width: 200px; word-wrap: break-word;">${speciesText}</td>
+                            <td>${obs.weather || ''} ${obs.temperature ? obs.temperature + '°C' : ''}</td>
+                            <td>${obs.habitat || ''}</td>
+                            <td style="max-width: 150px; word-wrap: break-word;">${(obs.notes || '').substring(0, 50)}${obs.notes && obs.notes.length > 50 ? '...' : ''}</td>
+                        </tr>
+                    `;
+                });
+                
+                tableHTML += '</tbody></table></div>';
+                container.innerHTML = tableHTML;
+            }
+            
+            viewer.style.display = 'flex';
+        }
+
+        // Chiudi visualizzatore
+        function closeDataViewer() {
+            document.getElementById('dataViewer').style.display = 'none';
+        }
+
+        // Cancella tutti i dati
+        function clearAllData() {
+            if (confirm('ATTENZIONE: Questa operazione cancellerà TUTTE le osservazioni salvate. Sei sicuro di voler continuare?\n\nConsiglio: esporta prima i dati in CSV come backup.')) {
+                localStorage.removeItem('ornithologyData');
+                closeDataViewer();
+                
+                const statusDiv = document.getElementById('statusMessage');
+                statusDiv.innerHTML = '<div class="success">🗑️ Tutti i dati sono stati cancellati.</div>';
+                setTimeout(() => statusDiv.innerHTML = '', 3000);
+            }
+        }
+
+        // Chiudi viewer cliccando fuori
+        document.getElementById('dataViewer').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDataViewer();
+            }
+        });
+    </script>
+</body>
+</html>
